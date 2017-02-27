@@ -18,11 +18,13 @@ def print_header
 end
 
 def print(students, search_letter)
+
     puts "Pupils beginning with #{search_letter}"
     
     students.each_with_index do |student, index|
-        if student[:name][0].downcase == search_letter
+        if student[:name][0].downcase == search_letter && student[:name].length < 12
             puts "#{index + 1}. #{student[:name]} (#{student[:cohort]} cohort)"
+        else
         end
     end
 end
