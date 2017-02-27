@@ -36,18 +36,22 @@ end
 
 def print(students, search_letter, search_length)
 
-    puts "Pupils beginning with #{search_letter}"
+    puts "Pupils beginning with #{search_letter} and less than #{search_length} characters."
     students.select! {|student| student[:name].downcase.start_with?(search_letter)}
-    #puts students
-    #puts students[0][:name].length
     students.select! {|student| student[:name].length < search_length}
-    puts students
   
     students.each_with_index do |student, index|
-            puts "#{index + 1}. #{student[:name]} (#{student[:cohort]} cohort)"
+        puts "#{index + 1}. #{student[:name]} (#{student[:cohort]} cohort)"
     end
 end
 
+def print_with_while (students)
+    i=0
+    while i < students.length
+       puts "#{i + 1}. #{students[i][:name]} #{students[i][:cohort]}" 
+       i+=1
+    end
+end
 
 def print_footer(names)
     puts "Overall, we have #{names.count} great students. "
@@ -59,5 +63,6 @@ end
 
 
 print_header
-print(students, "j", 20)
+#print(students, "j", 15)
+print_with_while(students)
 print_footer(students)
