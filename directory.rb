@@ -1,16 +1,17 @@
+#Hash of students for testing purposes.
 students = [
-    {name: "Dr. Hannibal Lecter",           cohort: :november},
-    {name: "Darth Vader",                   cohort: :november},
-    {name: "Nurse Ratched",                 cohort: :november},
-    {name: "Michael Corleone",              cohort: :november},
-    {name: "Alex DeLarge",                  cohort: :november},
-    {name: "The Wicked Witch of the West",  cohort: :november},
-    {name: "Terminator",                    cohort: :november},
-    {name: "Freddy Krueger",                cohort: :november},
-    {name: "The Joker",                     cohort: :november},
-    {name: "Joffrey Baratheon",             cohort: :november},
-    {name: "Jeremy Bowers",                 cohort: :novemeber},
-    {name: "Norman Bates",                  cohort: :november}
+    {name: "Dr. Hannibal Lecter",           cohort: :march,     hobby: :coding},
+    {name: "Darth Vader",                   cohort: :april,     hobby: :coding},
+    {name: "Nurse Ratched",                 cohort: :april,     hobby: :coding},
+    {name: "Michael Corleone",              cohort: :march,     hobby: :coding},
+    {name: "Alex DeLarge",                  cohort: :november,  hobby: :coding},
+    {name: "The Wicked Witch of the West",  cohort: :november,  hobby: :coding},
+    {name: "Terminator",                    cohort: :november,  hobby: :coding},
+    {name: "Freddy Krueger",                cohort: :november,  hobby: :coding},
+    {name: "The Joker",                     cohort: :november,  hobby: :coding},
+    {name: "Joffrey Baratheon",             cohort: :november,  hobby: :coding},
+    {name: "Jeremy Bowers",                 cohort: :november,  hobby: :coding},
+    {name: "Norman Bates",                  cohort: :november,  hobby: :coding}
 ]
 
 def input_students
@@ -52,7 +53,7 @@ def print_header(pad)
     puts "--------------------------------".center(pad)
 end
 
-def print_students(students,pad)
+def print_by_name(students)
     
     students.each_with_index do |student, i|
         print "#{i + 1}.\t" #{student[:name]} (#{student[:cohort]} cohort)".center(pad)
@@ -61,6 +62,30 @@ def print_students(students,pad)
     end
 end
 
+def print_by_cohort(student)
+    students
+    
+end
+
+def find_max_padding (students)
+    #assuming all hashes have the same key identifiers
+    key_names = []
+    students[0].each_key {|key| key_names << key}
+    #Extracts key names and keeps them as symbols
+    key_lengths = {}
+    
+    key_names.each do |key|
+       l_max = 0
+       
+       students.each {|student| l_max = student[key].length if student[key].length > l_max}
+       
+       key_lengths[key] = l_max
+        
+    end
+    
+    puts key_lengths
+    
+end
 
 def filter(students, search_letter, search_length)
     puts "Pupils beginning with #{search_letter} and less than #{search_length} characters."
@@ -86,14 +111,14 @@ end
 
 
 
-students = input_students
-students = filter(students, "", 18)
+#students = input_students
+#students = filter(students, "", 18)
 
 pad = 80
 
 print_header(pad)
-print_students(students,pad)
+print_by_name(students)
 print_footer(students,pad)
-
+find_max_padding(students)
 #print_with_while(students)
 
