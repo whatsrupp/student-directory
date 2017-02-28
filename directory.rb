@@ -1,5 +1,5 @@
 #Hash of students for testing purposes.
-students = [
+default_students = [
     {name: "Dr. Hannibal Lecter",           cohort: :march,     hobby: :coding,     age: 45},
     {name: "Darth Vader",                   cohort: :april,     hobby: :coding,     age: 45},
     {name: "Nurse Ratched",                 cohort: :april,     hobby: :coding,     age: 45},
@@ -135,7 +135,8 @@ def calculate_padding (students, spacing)
 end
 
 
-def interactive_menu
+def interactive_menu (default_students)
+    students = []
     #Default Parameters
     spacing = 10
     letter = "D"
@@ -153,11 +154,35 @@ def interactive_menu
         ans = gets.chomp
         
         case ans
-            when "1"
+            when "1" 
                 #Input students
             when "2"
-                #show students
+                #Use Default students
+                if students.empty?
+                    puts "Currently no students stored in the system!"
+                    puts "1. Use Defaults"
+                    puts "2. Input Manually"
+                    puts "9. Return to Main Menu"
+                    print "> "
+                    ans = gets.chomp
+                    case ans 
+                        when "1" then students = default_students
+                        when "2" then students = input_students
+                        when "9" then next
+                        else puts "I don't understand that"
+                    end
+                end
+                    pad = calculate_padding(students,spacing)[1]
+                    print_header(pad)
+                    print_student_list(students,spacing)
+                    print_footer(students,pad)
+                
             when "3"
+                #show students
+                if students.empty?
+                   puts "Current student list is empty" 
+                end
+            when "4"
                 changed_parameters = set_parameters(spacing,letter,max_characters)
                 spacing = changed_parameters[0]
                 letter = changed_parameters[1]
@@ -214,6 +239,7 @@ letter = "D"
 max_characters = 30
 
 #Sorting and Filtering
+#students = default_students
 #students = input_students # Comment out for default students
 students = first_letter_filter(students, letter)
 students = character_length_filter(students, max_characters)
@@ -232,4 +258,4 @@ print_student_list(students,spacing)
 print_footer(students,pad)
 #print_with_while(students)
 =end
-interactive_menu
+interactive_menu(default_students)
