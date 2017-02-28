@@ -14,6 +14,7 @@ students = [
     {name: "Norman Bates",                  cohort: :november,  hobby: :coding,     age: 45}
 ]
 
+#############INPUTS################
 def input_students
    
    puts "Please enter the names of the students"
@@ -47,22 +48,7 @@ def input_students
     students
 end
 
-
-def print_header(pad)
-    puts "The students of Villains Academy".center(pad)
-    puts "--------------------------------".center(pad)
-end
-
-def print_student_list(students,spacing)
-    
-   padding_hash = calculate_padding(students, spacing)[0]
-   
-    students.each_with_index do |student, i|
-        print "#{(i + 1).to_s.ljust(spacing)}" 
-        student.each_key {|key| print "#{student[key].to_s.ljust(padding_hash[key])}" }
-        print"\n"
-    end
-end
+########FILTERING AND ARRANGING ##############
 
 def arrange_by_cohort(students)
     
@@ -76,6 +62,51 @@ def arrange_by_cohort(students)
     end
     return arranged_students
     
+end
+
+
+def first_letter_filter(students, search_letter)
+    students.select! {|student| student[:name].downcase.start_with?(search_letter.downcase)}
+    puts "Searching for student names beginning with #{search_letter}"
+    return students
+end
+
+def character_length_filter(students, search_length)
+    students.select! {|student| student[:name].length < search_length}
+    puts "Searching for student names less than #{search_length} characters."
+    return students
+end
+
+################# PRINTING ##############
+
+def print_with_while (students)
+    i=0
+    while i < students.length
+       puts "#{i + 1}. #{students[i][:name]} #{students[i][:cohort]}" 
+       i+=1
+    end
+end
+
+def print_footer(students,pad)
+    puts "-" * pad
+    puts "Overall, we have #{students.count} great student#{"s" unless students.count == 1}.".center(pad)
+    
+end
+
+def print_header(pad)
+    puts "The students of Villains Academy".center(pad)
+    puts ("-"*pad).center(pad)
+end
+
+def print_student_list(students,spacing)
+    
+    padding_hash = calculate_padding(students, spacing)[0]
+   
+    students.each_with_index do |student, i|
+        print "#{(i + 1).to_s.ljust(spacing)}" 
+        student.each_key {|key| print "#{student[key].to_s.ljust(padding_hash[key])}" }
+        print"\n"
+    end
 end
 
 def calculate_padding (students, spacing)
@@ -103,49 +134,27 @@ def calculate_padding (students, spacing)
     
 end
 
-def first_letter_filter(students, search_letter)
-    students.select! {|student| student[:name].downcase.start_with?(search_letter.downcase)}
-    puts "Searching for student names beginning with #{search_letter}"
-    return students
-end
-
-def character_length_filter(students, search_length)
-    students.select! {|student| student[:name].length < search_length}
-    puts "Searching for student names less than #{search_length} characters."
-    return students
-end
-
-def print_with_while (students)
-    i=0
-    while i < students.length
-       puts "#{i + 1}. #{students[i][:name]} #{students[i][:cohort]}" 
-       i+=1
-    end
-end
-
-def print_footer(students,pad)
-        puts "Overall, we have #{students.count} great student#{"s" unless students.count == 1}.".center(pad)
-    
-end
-
-
-
 #Inputs
 spacing = 5
 letter = ""
-max_characters = 25
+max_characters = 1
 
-students = input_students
+#Sorting and Filtering
+#students = input_students # Comment out for default students
 students = first_letter_filter(students, letter)
 students = character_length_filter(students, max_characters)
-
-
 students = arrange_by_cohort(students)
-arrange_by_cohort(students)
+
+if students.empty?
+   puts "No Search Results"
+   exit
+end
+#Calculating variables from generated student list
 pad = calculate_padding(students,spacing)[1]
+
+#Printing
 print_header(pad)
 print_student_list(students,spacing)
 print_footer(students,pad)
-calculate_padding(students,spacing)
 #print_with_while(students)
 
