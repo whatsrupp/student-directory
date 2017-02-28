@@ -30,19 +30,26 @@ end
 
 
 def print_header
-    puts "The students of Villains Academy"
-    puts "--------------------------------"
+    pad = 80
+    puts "The students of Villains Academy".center(pad)
+    puts "--------------------------------".center(pad)
 end
 
-def print(students, search_letter, search_length)
+def print(students)
 
-    puts "Pupils beginning with #{search_letter} and less than #{search_length} characters."
-    students.select! {|student| student[:name].downcase.start_with?(search_letter)}
-    students.select! {|student| student[:name].length < search_length}
-  
+    students = filter(students, "c", 18)
+    puts "#{students}"
     students.each_with_index do |student, index|
         puts "#{index + 1}. #{student[:name]} (#{student[:cohort]} cohort)"
     end
+end
+
+
+def filter(students, search_letter, search_length)
+    #puts "Pupils beginning with #{search_letter} and less than #{search_length} characters."
+    students.select! {|student| student[:name].downcase.start_with?(search_letter)}
+    students.select! {|student| student[:name].length < search_length}
+    return students
 end
 
 def print_with_while (students)
@@ -63,6 +70,6 @@ end
 
 
 print_header
-#print(students, "j", 15)
-print_with_while(students)
+print(students)
+#print_with_while(students)
 print_footer(students)
