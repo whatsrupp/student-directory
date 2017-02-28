@@ -53,37 +53,45 @@ def print_header(pad)
     puts "--------------------------------".center(pad)
 end
 
-def print_by_name(students)
+def print_student_list(students)
     
+   padding_hash = find_max_padding(students)
+   
     students.each_with_index do |student, i|
-        print "#{i + 1}.\t" #{student[:name]} (#{student[:cohort]} cohort)".center(pad)
-        student.each_key {|key| print "#{student[key].to_s.capitalize}\t" }
+        print "#{i + 1}.\t" 
+        student.each_key {|key| print "#{student[key].to_s.capitalize.ljust(padding_hash[key] + 5)}" }
         print"\n"
     end
 end
 
-def print_by_cohort(student)
-    students
+def arrange_by_cohort(students)
+    
+    arranged_students = []
+    cohort_array =[]
+    students.each {|student| cohort_array << student[:cohort]}
+    cohort_array.uniq!.sort!
+    cohort_array.each do |cohort|
+        arranged_students += students.map{|student| student if student[:cohort] == cohort}.compact
+    end
+    return arranged_students
     
 end
 
 def find_max_padding (students)
     #assuming all hashes have the same key identifiers
-    key_names = []
-    students[0].each_key {|key| key_names << key}
-    #Extracts key names and keeps them as symbols
-    key_lengths = {}
+    key_names = [] #initalise empty variables required
+    key_lengths = {} 
+    students[0].each_key {|key| key_names << key} #gets key names from student list
     
+    #Iterate through each key and find the max length of each value in each student hash
     key_names.each do |key|
        l_max = 0
-       
        students.each {|student| l_max = student[key].length if student[key].length > l_max}
-       
        key_lengths[key] = l_max
         
     end
     
-    puts key_lengths
+    key_lengths
     
 end
 
@@ -116,9 +124,12 @@ end
 
 pad = 80
 
+students = arrange_by_cohort(students)
+#puts "HELLO #{students}"
 print_header(pad)
-print_by_name(students)
+print_student_list(students)
 print_footer(students,pad)
 find_max_padding(students)
+arrange_by_cohort(students)
 #print_with_while(students)
 
