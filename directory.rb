@@ -34,9 +34,12 @@ def print_header(pad)
     puts "--------------------------------".center(pad)
 end
 
-def print(students,pad)
-    students.each_with_index do |student, index|
-        puts "#{index + 1}. #{student[:name]} (#{student[:cohort]} cohort)".center(pad)
+def print_students(students,pad)
+    
+    students.each_with_index do |student, i|
+        print "#{i + 1}.\t" #{student[:name]} (#{student[:cohort]} cohort)".center(pad)
+        student.each_key {|key| print "#{student[key]}\t" }
+        print"\n"
     end
 end
 
@@ -67,7 +70,7 @@ students = filter(students, "c", 18)
 pad = 80
 
 print_header(pad)
-print(students,pad)
+print_students(students,pad)
 print_footer(students,pad)
 
 #print_with_while(students)
