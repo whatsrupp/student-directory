@@ -29,18 +29,17 @@ def input_students
 end
 
 
-def print_header
-    pad = 80
+def print_header(pad)
     puts "The students of Villains Academy".center(pad)
     puts "--------------------------------".center(pad)
 end
 
-def print(students)
+def print(students,pad)
 
-    students = filter(students, "c", 18)
-    puts "#{students}"
+    
+    #puts "#{students}"
     students.each_with_index do |student, index|
-        puts "#{index + 1}. #{student[:name]} (#{student[:cohort]} cohort)"
+        puts "#{index + 1}. #{student[:name]} (#{student[:cohort]} cohort)".center(pad)
     end
 end
 
@@ -60,16 +59,18 @@ def print_with_while (students)
     end
 end
 
-def print_footer(names)
-    puts "Overall, we have #{names.count} great students. "
+def print_footer(names,pad)
+    puts "Overall, we have #{names.count} great students.".center(pad)
 end
 
 
-#students = input_students
+students = input_students
+students = filter(students, "c", 18)
 
+pad = 80
 
+print_header(pad)
+print(students,pad)
+print_footer(students,pad)
 
-print_header
-print(students)
 #print_with_while(students)
-print_footer(students)
