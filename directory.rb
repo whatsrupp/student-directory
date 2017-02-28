@@ -144,10 +144,13 @@ def interactive_menu (default_students)
     
     loop do
         # Print the menu and ask user
-        puts "MAIN MENU"
+        puts ""
+        puts "MAIN MENU".center(30)
         puts "1. Input the students"
         puts "2. Show the students"
-        puts "3. Change Parameters"
+        puts "3. Change default search parameters"
+        puts "4. Clear current student list"
+        puts "5. Search Students"
         puts "9. Exit"
         print "> "
         
@@ -156,8 +159,25 @@ def interactive_menu (default_students)
         case ans
             when "1" 
                 #Input students
+                puts ""
+                puts "INPUT STUDENT MENU"
+                puts "1. Input your own students"
+                puts "2. Generate default student list"
+                puts "9. Return to Main Menu"
+                print "> "
+                ans = gets.chomp
+                
+                
+                case ans
+                    when "1" then students = input_students
+                    when "2" then students = default_students
+                    when "9" then next
+                    else "I don't know what you mean"
+                end
+               
+                
             when "2"
-                #Use Default students
+                #print students
                 if students.empty?
                     puts "Currently no students stored in the system!"
                     puts "1. Use Defaults"
@@ -176,13 +196,9 @@ def interactive_menu (default_students)
                     print_header(pad)
                     print_student_list(students,spacing)
                     print_footer(students,pad)
-                
+                    
             when "3"
-                #show students
-                if students.empty?
-                   puts "Current student list is empty" 
-                end
-            when "4"
+                # Change Parameters
                 changed_parameters = set_parameters(spacing,letter,max_characters)
                 spacing = changed_parameters[0]
                 letter = changed_parameters[1]
@@ -191,7 +207,12 @@ def interactive_menu (default_students)
                 puts "Spacing of table: #{spacing}"
                 puts "Start Letter: #{letter}"
                 puts "Maximum No Characters: #{max_characters}"
-                
+            when "4"
+                students = []
+                puts "Students Cleared"
+            
+            when "5"
+                puts "pending"
                 
             when "9"
                 exit 
@@ -204,7 +225,7 @@ end
 
 def set_parameters(spacing, letter, max_characters)
     loop do
-        puts "Current Parameters:"
+        puts "CURRENT PARAMETER MENU".center(30)
         puts "1. Spacing of table: #{spacing}"
         puts "2. Start Letter: #{letter}"
         puts "3. Maximum No Characters: #{max_characters}"
