@@ -18,15 +18,30 @@ def input_students
    puts "Please enter the names of the students"
    puts "To finish, just hit return twice"
    students =[]
+   months = %w(january february march april may june july august september october november december)
+   default= "november"
    
    while true
-      print "Student Name? >"
+      print "Student Name? (Return empty to finish student entry) > "
       name = gets.chomp
+      
       break if name.empty?
-      print "Which Cohort? >"
-      cohort = gets.chomp.to_sym
+     
+      while true
+        print "Which Cohort? (Return for default - #{default}) > "
+        cohort = gets.chomp.downcase
+        if months.include?(cohort)
+            break
+        elsif cohort.empty?
+            cohort = default
+            break
+        else
+            puts "Please insert valid month"
+        end
+      end
+      
+      students << {name: name, cohort: cohort.to_sym}
       puts "Now we have #{students.count} students"
-      students << {name: name, cohort: cohort}
    end
     students
 end
