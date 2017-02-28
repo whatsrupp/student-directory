@@ -134,10 +134,84 @@ def calculate_padding (students, spacing)
     
 end
 
+
+def interactive_menu
+    #Default Parameters
+    spacing = 10
+    letter = "D"
+    max_characters = 30
+    
+    loop do
+        # Print the menu and ask user
+        puts "MAIN MENU"
+        puts "1. Input the students"
+        puts "2. Show the students"
+        puts "3. Change Parameters"
+        puts "9. Exit"
+        print "> "
+        
+        ans = gets.chomp
+        
+        case ans
+            when "1"
+                #Input students
+            when "2"
+                #show students
+            when "3"
+                changed_parameters = set_parameters(spacing,letter,max_characters)
+                spacing = changed_parameters[0]
+                letter = changed_parameters[1]
+                max_characters = changed_parameters[2]
+                puts "New Parameters"
+                puts "Spacing of table: #{spacing}"
+                puts "Start Letter: #{letter}"
+                puts "Maximum No Characters: #{max_characters}"
+                
+                
+            when "9"
+                exit 
+            else 
+                puts "I don't know what you mean"
+            end
+    end
+    
+end
+
+def set_parameters(spacing, letter, max_characters)
+    loop do
+        puts "Current Parameters:"
+        puts "1. Spacing of table: #{spacing}"
+        puts "2. Start Letter: #{letter}"
+        puts "3. Maximum No Characters: #{max_characters}"
+        puts "9. Exit"
+        print "Choose number of variable you need to change >"
+        ans = gets.chomp
+        
+        case ans
+            when "1"
+                spacing = change_variable(spacing)
+            when "2"
+                letter = change_variable(letter)
+            when "3"
+                max_characters = change_variable(max_characters)
+            when "9"
+                return [spacing,letter,max_characters]
+            else
+                "Please insert valid number"
+        end
+    end
+end
+
+def change_variable(variable)
+    print "Insert new value for #{variable} (Return Blank to cancel) > "
+    ans = gets.chomp 
+    variable = ans unless ans.empty?
+end
+=begin
 #Inputs
-spacing = 5
-letter = ""
-max_characters = 1
+spacing = 10
+letter = "D"
+max_characters = 30
 
 #Sorting and Filtering
 #students = input_students # Comment out for default students
@@ -157,4 +231,5 @@ print_header(pad)
 print_student_list(students,spacing)
 print_footer(students,pad)
 #print_with_while(students)
-
+=end
+interactive_menu
