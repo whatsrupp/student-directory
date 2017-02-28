@@ -69,7 +69,8 @@ def arrange_by_cohort(students)
     arranged_students = []
     cohort_array =[]
     students.each {|student| cohort_array << student[:cohort]}
-    cohort_array.uniq!.sort!
+    cohort_array.uniq!
+    cohort_array.sort!
     cohort_array.each do |cohort|
         arranged_students += students.map{|student| student if student[:cohort] == cohort}.compact
     end
@@ -86,22 +87,17 @@ def calculate_padding (students, spacing)
     
     #Iterate through each key and find the max length of each value in each student hash
     key_names.each do |key|
-        
        l_max = 0
        students.each do |student| 
-           
            l = student[key].to_s.length 
            l_max = l if l > l_max
        end
        key_lengths[key] = l_max + spacing
-        
     end
     
     key_lengths.each_key do|key|
-    
         l_total += key_lengths[key]
     end
-    
     
     [key_lengths, l_total]
     
@@ -127,8 +123,9 @@ def print_with_while (students)
     end
 end
 
-def print_footer(names,pad)
-    puts "Overall, we have #{names.count} great students.".center(pad)
+def print_footer(students,pad)
+        puts "Overall, we have #{students.count} great student#{"s" unless students.count == 1}.".center(pad)
+    
 end
 
 
@@ -138,7 +135,7 @@ spacing = 5
 letter = ""
 max_characters = 25
 
-#students = input_students
+students = input_students
 students = first_letter_filter(students, letter)
 students = character_length_filter(students, max_characters)
 
