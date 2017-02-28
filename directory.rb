@@ -1,17 +1,17 @@
 #Hash of students for testing purposes.
 students = [
-    {name: "Dr. Hannibal Lecter",           cohort: :march,     hobby: :coding},
-    {name: "Darth Vader",                   cohort: :april,     hobby: :coding},
-    {name: "Nurse Ratched",                 cohort: :april,     hobby: :coding},
-    {name: "Michael Corleone",              cohort: :march,     hobby: :coding},
-    {name: "Alex DeLarge",                  cohort: :november,  hobby: :coding},
-    {name: "The Wicked Witch of the West",  cohort: :november,  hobby: :coding},
-    {name: "Terminator",                    cohort: :november,  hobby: :coding},
-    {name: "Freddy Krueger",                cohort: :november,  hobby: :coding},
-    {name: "The Joker",                     cohort: :november,  hobby: :coding},
-    {name: "Joffrey Baratheon",             cohort: :november,  hobby: :coding},
-    {name: "Jeremy Bowers",                 cohort: :november,  hobby: :coding},
-    {name: "Norman Bates",                  cohort: :november,  hobby: :coding}
+    {name: "Dr. Hannibal Lecter",           cohort: :march,     hobby: :coding,     age: 45},
+    {name: "Darth Vader",                   cohort: :april,     hobby: :coding,     age: 45},
+    {name: "Nurse Ratched",                 cohort: :april,     hobby: :coding,     age: 45},
+    {name: "Michael Corleone",              cohort: :march,     hobby: :coding,     age: 45},
+    {name: "Alex DeLarge",                  cohort: :november,  hobby: :coding,     age: 45},
+    {name: "The Wicked Witch of the West",  cohort: :november,  hobby: :coding,     age: 45},
+    {name: "Terminator",                    cohort: :november,  hobby: :coding,     age: 45},
+    {name: "Freddy Krueger",                cohort: :november,  hobby: :coding,     age: 45},
+    {name: "The Joker",                     cohort: :november,  hobby: :coding,     age: 45},
+    {name: "Joffrey Baratheon",             cohort: :november,  hobby: :coding,     age: 45},
+    {name: "Jeremy Bowers",                 cohort: :november,  hobby: :coding,     age: 45},
+    {name: "Norman Bates",                  cohort: :november,  hobby: :coding,     age: 45}
 ]
 
 def input_students
@@ -53,13 +53,13 @@ def print_header(pad)
     puts "--------------------------------".center(pad)
 end
 
-def print_student_list(students)
+def print_student_list(students,spacing)
     
-   padding_hash = find_max_padding(students)
+   padding_hash = calculate_padding(students, spacing)[0]
    
     students.each_with_index do |student, i|
         print "#{i + 1}.\t" 
-        student.each_key {|key| print "#{student[key].to_s.capitalize.ljust(padding_hash[key] + 5)}" }
+        student.each_key {|key| print "#{student[key].to_s.capitalize.ljust(padding_hash[key])}" }
         print"\n"
     end
 end
@@ -77,21 +77,33 @@ def arrange_by_cohort(students)
     
 end
 
-def find_max_padding (students)
+def calculate_padding (students, spacing)
     #assuming all hashes have the same key identifiers
     key_names = [] #initalise empty variables required
     key_lengths = {} 
     students[0].each_key {|key| key_names << key} #gets key names from student list
+    l_total = 0
     
     #Iterate through each key and find the max length of each value in each student hash
     key_names.each do |key|
+        
        l_max = 0
-       students.each {|student| l_max = student[key].length if student[key].length > l_max}
-       key_lengths[key] = l_max
+       students.each do |student| 
+           
+           l = student[key].to_s.length 
+           l_max = l if l > l_max
+       end
+       key_lengths[key] = l_max + spacing
         
     end
+    puts "#{key_lengths}"
+    key_lengths.each_key do|key|
     
-    key_lengths
+        l_total += key_lengths[key]
+    end
+    puts l_total
+    
+    [key_lengths, l_total]
     
 end
 
@@ -121,15 +133,14 @@ end
 
 #students = input_students
 #students = filter(students, "", 18)
-
-pad = 80
+spacing = 50
 
 students = arrange_by_cohort(students)
-#puts "HELLO #{students}"
-print_header(pad)
-print_student_list(students)
-print_footer(students,pad)
-find_max_padding(students)
 arrange_by_cohort(students)
+pad = calculate_padding(students,spacing)[1]
+print_header(pad)
+print_student_list(students,spacing)
+print_footer(students,pad)
+calculate_padding(students,spacing)
 #print_with_while(students)
 
