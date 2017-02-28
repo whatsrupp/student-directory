@@ -58,8 +58,8 @@ def print_student_list(students,spacing)
    padding_hash = calculate_padding(students, spacing)[0]
    
     students.each_with_index do |student, i|
-        print "#{i + 1}.\t" 
-        student.each_key {|key| print "#{student[key].to_s.capitalize.ljust(padding_hash[key])}" }
+        print "#{(i + 1).to_s.ljust(spacing)}" 
+        student.each_key {|key| print "#{student[key].to_s.ljust(padding_hash[key])}" }
         print"\n"
     end
 end
@@ -96,12 +96,12 @@ def calculate_padding (students, spacing)
        key_lengths[key] = l_max + spacing
         
     end
-    puts "#{key_lengths}"
+    
     key_lengths.each_key do|key|
     
         l_total += key_lengths[key]
     end
-    puts l_total
+    
     
     [key_lengths, l_total]
     
@@ -109,11 +109,13 @@ end
 
 def first_letter_filter(students, search_letter)
     students.select! {|student| student[:name].downcase.start_with?(search_letter.downcase)}
+    puts "Searching for student names beginning with #{search_letter}"
     return students
 end
 
 def character_length_filter(students, search_length)
     students.select! {|student| student[:name].length < search_length}
+    puts "Searching for student names less than #{search_length} characters."
     return students
 end
 
@@ -131,13 +133,15 @@ end
 
 
 
-
-
+#Inputs
+spacing = 5
+letter = ""
+max_characters = 25
 
 #students = input_students
-students = first_letter_filter(students, "")
-students = character_length_filter(students, 18)
-spacing = 0
+students = first_letter_filter(students, letter)
+students = character_length_filter(students, max_characters)
+
 
 students = arrange_by_cohort(students)
 arrange_by_cohort(students)
