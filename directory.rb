@@ -35,9 +35,6 @@ def print_header(pad)
 end
 
 def print(students,pad)
-
-    
-    #puts "#{students}"
     students.each_with_index do |student, index|
         puts "#{index + 1}. #{student[:name]} (#{student[:cohort]} cohort)".center(pad)
     end
@@ -45,7 +42,7 @@ end
 
 
 def filter(students, search_letter, search_length)
-    #puts "Pupils beginning with #{search_letter} and less than #{search_length} characters."
+    puts "Pupils beginning with #{search_letter} and less than #{search_length} characters."
     students.select! {|student| student[:name].downcase.start_with?(search_letter)}
     students.select! {|student| student[:name].length < search_length}
     return students
