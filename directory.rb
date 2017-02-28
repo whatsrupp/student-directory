@@ -107,9 +107,12 @@ def calculate_padding (students, spacing)
     
 end
 
-def filter(students, search_letter, search_length)
-    puts "Pupils beginning with #{search_letter} and less than #{search_length} characters."
+def first_letter_filter(students, search_letter)
     students.select! {|student| student[:name].downcase.start_with?(search_letter.downcase)}
+    return students
+end
+
+def character_length_filter(students, search_length)
     students.select! {|student| student[:name].length < search_length}
     return students
 end
@@ -132,8 +135,9 @@ end
 
 
 #students = input_students
-#students = filter(students, "", 18)
-spacing = 50
+students = first_letter_filter(students, "")
+students = character_length_filter(students, 18)
+spacing = 0
 
 students = arrange_by_cohort(students)
 arrange_by_cohort(students)
