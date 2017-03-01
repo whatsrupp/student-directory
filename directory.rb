@@ -52,14 +52,17 @@ end
 
 def arrange_by_cohort(students)
     
-    arranged_students = []
-    cohort_array =[]
-    students.each {|student| cohort_array << student[:cohort]}
-    cohort_array.uniq!
-    cohort_array.sort!
-    cohort_array.each do |cohort|
-        arranged_students += students.map{|student| student if student[:cohort] == cohort}.compact
-    end
+    #arranged_students = []
+    #cohort_array =[]
+    #students.each {|student| cohort_array << student[:cohort]}
+    #cohort_array.uniq!
+    #cohort_array.sort!
+    #cohort_array.each do |cohort|
+    #    arranged_students += students.map{|student| student if student[:cohort] == cohort}.compact
+    #end
+    
+    
+    arranged_students =  students.sort_by {|student| student[:cohort].to_s}
     return arranged_students
     
 end
@@ -227,7 +230,8 @@ def interactive_menu (default_students)
                 puts "Students Cleared"
             
             when "5"
-                puts "pending"
+                students = arrange_by_cohort(students)
+                
                 
             when "9"
                 exit 
@@ -236,6 +240,15 @@ def interactive_menu (default_students)
         end
             
     end
+    
+end
+
+def sort_menu
+   puts "SORT MENU"
+   puts "1. Arrange by cohort"
+   puts "9. Exit"
+   
+    
     
 end
 
