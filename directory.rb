@@ -134,37 +134,57 @@ def calculate_padding (students, spacing)
     
 end
 
+def print_main_menu
+   
+    puts ""
+    puts "MAIN MENU".center(30)
+    puts "1. Input the students"
+    puts "2. Show the students"
+    puts "3. Change default search parameters"
+    puts "4. Clear current student list"
+    puts "5. Search Students"
+    puts "9. Exit"
+    print "> "
+    
+end
+
+def print_input_student_menu
+
+    #Input students
+    puts ""
+    puts "INPUT STUDENT MENU"
+    puts "1. Input your own students"
+    puts "2. Generate default student list"
+    puts "9. Return to Main Menu"
+    print "> "
+
+end
+
+def show_students(students)
+    pad = calculate_padding(students,@spacing)[1]
+    print_header(pad)
+    print_student_list(students,@spacing)
+    print_footer(students,pad)
+end
+
 
 def interactive_menu (default_students)
     students = []
     #Default Parameters
-    spacing = 10
-    letter = "D"
-    max_characters = 30
+    @spacing = 10
+    @letter = "D"
+    @max_characters = 30
     
     loop do
         # Print the menu and ask user
-        puts ""
-        puts "MAIN MENU".center(30)
-        puts "1. Input the students"
-        puts "2. Show the students"
-        puts "3. Change default search parameters"
-        puts "4. Clear current student list"
-        puts "5. Search Students"
-        puts "9. Exit"
-        print "> "
         
+        print_main_menu
         ans = gets.chomp
         
         case ans
             when "1" 
-                #Input students
-                puts ""
-                puts "INPUT STUDENT MENU"
-                puts "1. Input your own students"
-                puts "2. Generate default student list"
-                puts "9. Return to Main Menu"
-                print "> "
+                print_input_student_menu
+                
                 ans = gets.chomp
                 
                 
@@ -192,21 +212,16 @@ def interactive_menu (default_students)
                         else puts "I don't understand that"
                     end
                 end
-                    pad = calculate_padding(students,spacing)[1]
-                    print_header(pad)
-                    print_student_list(students,spacing)
-                    print_footer(students,pad)
+                
+                    show_students(students)
                     
             when "3"
                 # Change Parameters
-                changed_parameters = set_parameters(spacing,letter,max_characters)
-                spacing = changed_parameters[0]
-                letter = changed_parameters[1]
-                max_characters = changed_parameters[2]
+                set_parameters
                 puts "New Parameters"
-                puts "Spacing of table: #{spacing}"
-                puts "Start Letter: #{letter}"
-                puts "Maximum No Characters: #{max_characters}"
+                puts "Spacing of table: #{@spacing}"
+                puts "Start Letter: #{@letter}"
+                puts "Maximum No Characters: #{@max_characters}"
             when "4"
                 students = []
                 puts "Students Cleared"
@@ -218,30 +233,32 @@ def interactive_menu (default_students)
                 exit 
             else 
                 puts "I don't know what you mean"
-            end
+        end
+            
     end
     
 end
 
-def set_parameters(spacing, letter, max_characters)
+def set_parameters
     loop do
         puts "CURRENT PARAMETER MENU".center(30)
-        puts "1. Spacing of table: #{spacing}"
-        puts "2. Start Letter: #{letter}"
-        puts "3. Maximum No Characters: #{max_characters}"
+        puts "1. Spacing of table: #{@spacing}"
+        puts "2. Start Letter: #{@letter}"
+        puts "3. Maximum No Characters: #{@max_characters}"
         puts "9. Exit"
         print "Choose number of variable you need to change >"
         ans = gets.chomp
         
         case ans
             when "1"
-                spacing = change_variable(spacing)
+                @spacing = change_variable(@spacing)
             when "2"
-                letter = change_variable(letter)
+                @letter = change_variable(@letter)
             when "3"
-                max_characters = change_variable(max_characters)
+                @max_characters = change_variable(@max_characters)
             when "9"
-                return [spacing,letter,max_characters]
+                puts "Variables Saved"
+                return
             else
                 "Please insert valid number"
         end
