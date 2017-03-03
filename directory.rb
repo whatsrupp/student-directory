@@ -19,7 +19,7 @@ def input_students
    
    puts "Please enter the names of the students"
    puts "To finish, just hit return twice"
-   students =[]
+   @students =[]
    months = %w(january february march april may june july august september october november december)
    default= "november"
    
@@ -42,15 +42,29 @@ def input_students
         end
       end
       
-      students << {name: name, cohort: cohort.to_sym}
-      puts "Now we have #{students.count} students"
+      @students << {name: name, cohort: cohort.to_sym}
+      puts "Now we have #{@students.count} students"
    end
-    students
+   
+   if @students.empty?
+      puts "Empty Student list, are you sure you want to continue?"
+      puts "1. Continue"
+      puts "2. Re-Enter Students"
+      
+      ans = gets.chomp
+      case ans
+        when "1" then return 
+        when "2" then input_students
+        
+      end
+      
+      
+   end
 end
 
 ########FILTERING AND ARRANGING ##############
 
-def arrange_by_cohort(students)
+def arrange_by_cohort
     
     #arranged_students = []
     #cohort_array =[]
@@ -62,37 +76,29 @@ def arrange_by_cohort(students)
     #end
     
     
-    arranged_students =  students.sort_by {|student| student[:cohort].to_s}
-    return arranged_students
+    @students = @students.sort_by {|student| student[:cohort].to_s}
+    #return arranged_students
     
 end
 
 
-def first_letter_filter(students, search_letter)
-    students.select! {|student| student[:name].downcase.start_with?(search_letter.downcase)}
+def first_letter_filter
+    @students.select! {|student| student[:name].downcase.start_with?(@search_letter.downcase)}
     puts "Searching for student names beginning with #{search_letter}"
-    return students
+    return @students
 end
 
-def character_length_filter(students, search_length)
-    students.select! {|student| student[:name].length < search_length}
-    puts "Searching for student names less than #{search_length} characters."
-    return students
+def character_length_filter
+    @students.select! {|student| student[:name].length < @search_length}
+    puts "Searching for student names less than #{@search_length} characters."
 end
 
 ################# PRINTING ##############
 
-def print_with_while (students)
-    i=0
-    while i < students.length
-       puts "#{i + 1}. #{students[i][:name]} #{students[i][:cohort]}" 
-       i+=1
-    end
-end
 
-def print_footer(students,pad)
+def print_footer(pad)
     puts "-" * pad
-    puts "Overall, we have #{students.count} great student#{"s" unless students.count == 1}.".center(pad)
+    puts "Overall, we have #{@students.count} great student#{"s" unless @students.count == 1}.".center(pad)
     
 end
 
@@ -101,29 +107,29 @@ def print_header(pad)
     puts ("-"*pad).center(pad)
 end
 
-def print_student_list(students,spacing)
+def print_student_list(spacing)
     
-    padding_hash = calculate_padding(students, spacing)[0]
+    padding_hash = calculate_padding(spacing)[0]
    
-    students.each_with_index do |student, i|
+    @students.each_with_index do |student, i|
         print "#{(i + 1).to_s.ljust(spacing)}" 
         student.each_key {|key| print "#{student[key].to_s.ljust(padding_hash[key])}" }
         print"\n"
     end
 end
 
-def calculate_padding (students, spacing)
+def calculate_padding (spacing)
     #assuming all hashes have the same key identifiers
     key_names = [] #initalise empty variables required
     key_lengths = {} 
-    puts "#{students}"
-    students[0].each_key {|key| key_names << key} #gets key names from student list
+    
+    @students[0].each_key {|key| key_names << key} #gets key names from student list
     l_total = 0
     
     #Iterate through each key and find the max length of each value in each student hash
     key_names.each do |key|
        l_max = 0
-       students.each do |student| 
+       @students.each do |student| 
            l = student[key].to_s.length 
            l_max = l if l > l_max
        end
@@ -165,16 +171,17 @@ def print_input_student_menu
 
 end
 
-def show_students(students)
-    pad = calculate_padding(students,@spacing)[1]
+def show_students
+    return if @students.empty?
+    pad = calculate_padding(@spacing)[1]
     print_header(pad)
-    print_student_list(students,@spacing)
-    print_footer(students,pad)
+    print_student_list(@spacing)
+    print_footer(pad)
 end
 
 
 def interactive_menu
-    students = []
+    @students = []
     #Default Parameters
     @spacing = 10
     @letter = "D"
@@ -196,8 +203,8 @@ def interactive_menu
                 
                 
                 case ans
-                    when "1" then students = @input_students
-                    when "2" then students = @default_students
+                    when "1" then input_students
+                    when "2" then @students = @default_students
                     when "9" then next
                     else "I don't know what you mean"
                 end
@@ -205,19 +212,22 @@ def interactive_menu
                 
             when "2"
                 #print students
-                students = check_students(students)
-                show_students(students)
+                check_students
+                #@students = [] if @students==nil
+                show_students
+                
                     
             when "3"
                 # Change Parameters
                 set_parameters
                 
             when "4"
-                students = []
+                @students = []
                 puts "Students Cleared"
             
             when "5"
-                students = arrange_by_cohort(students)
+               arrange_by_cohort
+               puts "Students arranged by cohort"
             
             when "6"
                 save_students
@@ -231,6 +241,19 @@ def interactive_menu
     end
     
 end
+def check_students
+    if @students.empty?
+        puts "Currently no students stored in the system!"
+        puts "1. Use Defaults"
+        puts "2. Input Manually"
+        ans = gets.chomp
+        case ans 
+            when "1" then @students = @default_students;
+            when "2" then input_students; 
+            else puts "I don't understand that"
+        end
+    end
+end
 
 def sort_menu
    puts "SORT MENU"
@@ -238,22 +261,6 @@ def sort_menu
    puts "9. Exit"
 end
 
-def check_students(students)
-    if students.empty?
-        puts "Currently no students stored in the system!"
-        puts "1. Use Defaults"
-        puts "2. Input Manually"
-        puts "9. Return to Main Menu"
-        print "> "
-        ans = gets.chomp
-        case ans 
-            when "1" then students = @default_students
-            when "2" then students = @input_students
-            when "9" then return
-            else puts "I don't understand that"
-        end
-    end
-end
 
 def set_parameters
     loop do
@@ -267,11 +274,11 @@ def set_parameters
         
         case ans
             when "1"
-                @spacing = change_variable(@spacing)
+                @spacing = change_variable(@spacing).to_i
             when "2"
                 @letter = change_variable(@letter)
             when "3"
-                @max_characters = change_variable(@max_characters)
+                @max_characters = change_variable(@max_characters).to_i
             when "9"
                 puts "VARIABLES SAVED"
                 puts "New Parameters"
@@ -328,6 +335,7 @@ end
 pad = calculate_padding(students,spacing)[1]
 
 #Printing
+
 print_header(pad)
 print_student_list(students,spacing)
 print_footer(students,pad)
