@@ -147,13 +147,14 @@ def print_main_menu
     puts "3. Change default search parameters"
     puts "4. Clear current student list"
     puts "5. Search Students"
+    puts "6. Save Students"
     puts "9. Exit"
     print "> "
     
 end
 
 def print_input_student_menu
-
+    
     #Input students
     puts ""
     puts "INPUT STUDENT MENU"
@@ -217,7 +218,9 @@ def interactive_menu
             
             when "5"
                 students = arrange_by_cohort(students)
-                
+            
+            when "6"
+                save_students
                 
             when "9"
                 exit 
@@ -291,8 +294,17 @@ end
 
 
 def save_students 
+    filename = "students.csv"
+    file = File.open(filename, "w")
     
-    file = File.open("students.csv", "w")
+    @default_students.each do |student|
+        student_data = [student[:name], student[:cohort]]
+        csv_line = student_data.join(",")
+        file.puts csv_line
+    end
+    file.close
+    
+    puts "Current student list written to #{filename} successfully."
     
 end
 =begin
@@ -322,3 +334,4 @@ print_footer(students,pad)
 #print_with_while(students)
 =end
 interactive_menu
+#save_students
