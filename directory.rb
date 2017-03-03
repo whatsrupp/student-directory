@@ -1,5 +1,5 @@
 #Hash of students for testing purposes.
-default_students = [
+@default_students = [
     {name: "Dr. Hannibal Lecter",           cohort: :march,     hobby: :coding,     age: 45},
     {name: "Darth Vader",                   cohort: :april,     hobby: :coding,     age: 45},
     {name: "Nurse Ratched",                 cohort: :april,     hobby: :coding,     age: 45},
@@ -116,6 +116,7 @@ def calculate_padding (students, spacing)
     #assuming all hashes have the same key identifiers
     key_names = [] #initalise empty variables required
     key_lengths = {} 
+    puts "#{students}"
     students[0].each_key {|key| key_names << key} #gets key names from student list
     l_total = 0
     
@@ -171,12 +172,14 @@ def show_students(students)
 end
 
 
-def interactive_menu (default_students)
+def interactive_menu
     students = []
     #Default Parameters
     @spacing = 10
     @letter = "D"
     @max_characters = 30
+    @input_students = []
+    
     
     loop do
         # Print the menu and ask user
@@ -192,8 +195,8 @@ def interactive_menu (default_students)
                 
                 
                 case ans
-                    when "1" then students = input_students
-                    when "2" then students = default_students
+                    when "1" then students = @input_students
+                    when "2" then students = @default_students
                     when "9" then next
                     else "I don't know what you mean"
                 end
@@ -201,30 +204,13 @@ def interactive_menu (default_students)
                 
             when "2"
                 #print students
-                if students.empty?
-                    puts "Currently no students stored in the system!"
-                    puts "1. Use Defaults"
-                    puts "2. Input Manually"
-                    puts "9. Return to Main Menu"
-                    print "> "
-                    ans = gets.chomp
-                    case ans 
-                        when "1" then students = default_students
-                        when "2" then students = input_students
-                        when "9" then next
-                        else puts "I don't understand that"
-                    end
-                end
-                
-                    show_students(students)
+                students = check_students(students)
+                show_students(students)
                     
             when "3"
                 # Change Parameters
                 set_parameters
-                puts "New Parameters"
-                puts "Spacing of table: #{@spacing}"
-                puts "Start Letter: #{@letter}"
-                puts "Maximum No Characters: #{@max_characters}"
+                
             when "4"
                 students = []
                 puts "Students Cleared"
@@ -247,9 +233,23 @@ def sort_menu
    puts "SORT MENU"
    puts "1. Arrange by cohort"
    puts "9. Exit"
-   
-    
-    
+end
+
+def check_students(students)
+    if students.empty?
+        puts "Currently no students stored in the system!"
+        puts "1. Use Defaults"
+        puts "2. Input Manually"
+        puts "9. Return to Main Menu"
+        print "> "
+        ans = gets.chomp
+        case ans 
+            when "1" then students = @default_students
+            when "2" then students = @input_students
+            when "9" then return
+            else puts "I don't understand that"
+        end
+    end
 end
 
 def set_parameters
@@ -270,7 +270,11 @@ def set_parameters
             when "3"
                 @max_characters = change_variable(@max_characters)
             when "9"
-                puts "Variables Saved"
+                puts "VARIABLES SAVED"
+                puts "New Parameters"
+                puts "Spacing of table: #{@spacing}"
+                puts "Start Letter: #{@letter}"
+                puts "Maximum No Characters: #{@max_characters}"
                 return
             else
                 "Please insert valid number"
@@ -282,6 +286,14 @@ def change_variable(variable)
     print "Insert new value for #{variable} (Return Blank to cancel) > "
     ans = gets.chomp 
     variable = ans unless ans.empty?
+end
+
+
+
+def save_students 
+    
+    file = File.open("students.csv", "w")
+    
 end
 =begin
 #Inputs
@@ -309,4 +321,4 @@ print_student_list(students,spacing)
 print_footer(students,pad)
 #print_with_while(students)
 =end
-interactive_menu(default_students)
+interactive_menu
