@@ -304,15 +304,15 @@ def save_students
     filename = "students.csv"
     input_filename
     
-    file = File.open(filename, "w")
-    file.truncate(0)
-    
-    @students.each do |student|
-        student_data = [student[:name], student[:cohort]]
-        csv_line = student_data.join(",")
-        file.puts csv_line
+    File.open(filename, "w") do |f|
+        f.truncate(0)
+        
+        @students.each do |student|
+            student_data = [student[:name], student[:cohort]]
+            csv_line = student_data.join(",")
+            f.puts csv_line
+        end
     end
-    file.close
     
     puts "Current student list written to #{filename} successfully."
     sleep(1)
@@ -343,14 +343,14 @@ end
 def load_students (filename = "students.csv")
     filename = input_filename
     
-    file = File.open(filename,"r")
-    @students =[]
-    file.readlines.each do |line|
-        name, cohort = line.chomp.split(",")
-        @students << {name: name, cohort: cohort.to_sym}
+    File.open(filename,"r") do |f|
+        @students =[]
+        f.readlines.each do |line|
+            name, cohort = line.chomp.split(",")
+            @students << {name: name, cohort: cohort.to_sym}
+        end
     end
     
-    file.close
     puts "Student list imported from #{filename}"
     sleep(1)
 end
