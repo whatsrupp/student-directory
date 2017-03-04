@@ -82,7 +82,7 @@ def character_length_filter
     puts "Searching for student names less than #{@search_length} characters."
 end
 
-################# PRINTING ##############
+################# PRINTING METHODS ##############
 
 
 def print_footer(pad)
@@ -133,6 +133,8 @@ def calculate_padding (spacing)
     
 end
 
+######## MENU TEXT SET UP AND INITIALISATION METHODS #########
+
 def print_main_menu
    
     puts ""
@@ -149,7 +151,7 @@ def print_main_menu
     
 end
 
-def print_input_student_menu
+def input_student_menu
     
     #Input students
     puts ""
@@ -158,15 +160,21 @@ def print_input_student_menu
     puts "2. Generate default student list"
     puts "9. Return to Main Menu"
     print "> "
+    
+    ans = STDIN.gets.chomp
+    case ans
+        when "1" then input_students
+        when "2" then @students = @default_students
+        when "9" then return
+        else "I don't know what you mean"
+    end
 
 end
 
-def show_students
-    return if @students.empty?
-    pad = calculate_padding(@spacing)[1]
-    print_header(pad)
-    print_student_list(@spacing)
-    print_footer(pad)
+def sort_menu
+   puts "SORT MENU"
+   puts "1. Arrange by cohort"
+   puts "9. Exit"
 end
 
 def initialise_variables
@@ -179,67 +187,49 @@ def initialise_variables
     
 end
 
+######### MAIN MENU FUNCTIONALITY METHODS ########
 def interactive_menu
         initialise_variables
-        
         try_load_students
-    
+        main_menu_process
+end
+
+def main_menu_process 
     loop do
-        # Print the menu and ask user
-        
         print_main_menu
         ans = STDIN.gets.chomp
         
         case ans
-            when "1" 
-                print_input_student_menu
+            when "1" then input_student_menu
                 
-                ans = STDIN.gets.chomp
-                
-                
-                case ans
-                    when "1" then input_students
-                    when "2" then @students = @default_students
-                    when "9" then next
-                    else "I don't know what you mean"
-                end
-               
-                
-            when "2"
-                #print students
-                check_students
-                #@students = [] if @students==nil
-                show_students
-                
-                    
-            when "3"
-                # Change Parameters
-                set_parameters
-                
-            when "4"
-                @students = []
-                puts "Students Cleared"
+            when "2" then check_students; show_students
             
-            when "5"
-               arrange_by_cohort
-               puts "Students arranged by cohort"
+            when "3" then set_parameters
+                
+            when "4" then @students = []; puts "Students Cleared"
             
-            when "6"
-                save_students
+            when "5" then arrange_by_cohort; puts "Students arranged by cohort"
+            
+            when "6" then save_students
                 
-            when "7"
-                load_students
+            when "7" then load_students
                 
+            when "9" then exit 
                 
-            when "9"
-                exit 
-            else 
-                puts "I don't know what you mean"
+            else puts "I don't know what you mean"
         end
-            
     end
-    
 end
+
+####### UNDERLYING MENU METHODS
+def show_students
+    return if @students.empty?
+    pad = calculate_padding(@spacing)[1]
+    print_header(pad)
+    print_student_list(@spacing)
+    print_footer(pad)
+end
+
 
 def check_students
     if @students.empty?
@@ -253,12 +243,6 @@ def check_students
             else puts "I don't understand that"
         end
     end
-end
-
-def sort_menu
-   puts "SORT MENU"
-   puts "1. Arrange by cohort"
-   puts "9. Exit"
 end
 
 
@@ -297,7 +281,6 @@ def change_variable(variable)
     ans = STDIN.gets.chomp 
     variable = ans unless ans.empty?
 end
-
 
 
 def save_students 
@@ -367,32 +350,9 @@ def try_load_students
         exit
     end
 end
-=begin
-#Inputs
-spacing = 10
-letter = "D"
-max_characters = 30
 
-#Sorting and Filtering
-#students = default_students
-#students = input_students # Comment out for default students
-students = first_letter_filter(students, letter)
-students = character_length_filter(students, max_characters)
-students = arrange_by_cohort(students)
 
-if students.empty?
-   puts "No Search Results"
-   exit
-end
-#Calculating variables from generated student list
-pad = calculate_padding(students,spacing)[1]
+#### RUN THE PROGRAMME #######
 
-#Printing
 
-print_header(pad)
-print_student_list(students,spacing)
-print_footer(students,pad)
-#print_with_while(students)
-=end
 interactive_menu
-#save_students
