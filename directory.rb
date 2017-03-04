@@ -19,6 +19,7 @@ def print_main_menu
     puts "5. Search Students"
     puts "6. Save Students to .csv"
     puts "7. Load Students from .csv"
+    puts "8. Print Ruby source code"
     puts "9. Exit"
     print "> "
     
@@ -68,6 +69,8 @@ def main_menu_process
             when "6" then save_students
                 
             when "7" then load_students
+            
+            when "8" then print_own_code
                 
             when "9" then exit 
                 
@@ -337,7 +340,16 @@ def try_load_students
     end
 end
 
-
+##### 8. Print Own Source Code
+def print_own_code # CALLED A QUINE
+    
+   File.open($PROGRAM_NAME, "r") do |file| # COULD USE $0, possible to do with a QUINE
+       file.readlines.each do |line|
+           puts line.to_s
+       end
+   end
+    
+end
 ##### DEFAULT STUDENT HASH #####
 
 @default_students = [
@@ -359,3 +371,27 @@ end
 #### RUN THE PROGRAMME #######
 
 interactive_menu
+
+
+░░░░░░░░░░░░░░▄▄▄▄▄▄▄▄▄▄▄▄░░░░░░░░░░░░░░
+░░░░░░░░░░░░▄████████████████▄░░░░░░░░░░
+░░░░░░░░░░▄██▀░░░░░░░▀▀████████▄░░░░░░░░
+░░░░░░░░░▄█▀░░░░░░░░░░░░░▀▀██████▄░░░░░░
+░░░░░░░░░███▄░░░░░░░░░░░░░░░▀██████░░░░░
+░░░░░░░░▄░░▀▀█░░░░░░░░░░░░░░░░██████░░░░
+░░░░░░░█▄██▀▄░░░░░▄███▄▄░░░░░░███████░░░
+░░░░░░▄▀▀▀██▀░░░░░▄▄▄░░▀█░░░░█████████░░
+░░░░░▄▀░░░░▄▀░▄░░█▄██▀▄░░░░░██████████░░
+░░░░░█░░░░▀░░░█░░░▀▀▀▀▀░░░░░██████████▄░
+░░░░░░░▄█▄░░░░░▄░░░░░░░░░░░░██████████▀░
+░░░░░░█▀░░░░▀▀░░░░░░░░░░░░░███▀███████░░
+░░░▄▄░▀░▄░░░░░░░░░░░░░░░░░░▀░░░██████░░░
+██████░░█▄█▀░▄░░██░░░░░░░░░░░█▄█████▀░░░
+██████░░░▀████▀░▀░░░░░░░░░░░▄▀█████████▄
+██████░░░░░░░░░░░░░░░░░░░░▀▄████████████
+██████░░▄░░░░░░░░░░░░░▄░░░██████████████
+██████░░░░░░░░░░░░░▄█▀░░▄███████████████
+███████▄▄░░░░░░░░░▀░░░▄▀▄███████████████
+
+# Constructed By Nick Rupp 
+# Sponsored By Nick Cage
