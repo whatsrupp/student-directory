@@ -25,13 +25,13 @@ def input_students
    
    while true
       print "Student Name? (Return empty to finish student entry) > "
-      name = gets.chomp
+      name = STDIN.gets.chomp
       
       break if name.empty?
      
       while true
         print "Which Cohort? (Return for default - #{default}) > "
-        cohort = gets.chomp.downcase
+        cohort = STDIN.gets.chomp.downcase
         if months.include?(cohort)
             break
         elsif cohort.empty?
@@ -51,7 +51,7 @@ def input_students
       puts "1. Continue"
       puts "2. Re-Enter Students"
       
-      ans = gets.chomp
+      ans = STDIN.gets.chomp
       case ans
         when "1" then return 
         when "2" then input_students
@@ -66,18 +66,7 @@ end
 
 def arrange_by_cohort
     
-    #arranged_students = []
-    #cohort_array =[]
-    #students.each {|student| cohort_array << student[:cohort]}
-    #cohort_array.uniq!
-    #cohort_array.sort!
-    #cohort_array.each do |cohort|
-    #    arranged_students += students.map{|student| student if student[:cohort] == cohort}.compact
-    #end
-    
-    
     @students = @students.sort_by {|student| student[:cohort].to_s}
-    #return arranged_students
     
 end
 
@@ -123,7 +112,7 @@ def calculate_padding (spacing)
     key_names = [] #initalise empty variables required
     key_lengths = {} 
     
-    @students[0].each_key {|key| key_names << key} #gets key names from student list
+    @students[0].each_key {|key| key_names << key} #STDIN.gets key names from student list
     l_total = 0
     
     #Iterate through each key and find the max length of each value in each student hash
@@ -153,7 +142,8 @@ def print_main_menu
     puts "3. Change default search parameters"
     puts "4. Clear current student list"
     puts "5. Search Students"
-    puts "6. Save Students"
+    puts "6. Save Students to .csv"
+    puts "7. Load Students from .csv"
     puts "9. Exit"
     print "> "
     
@@ -179,8 +169,7 @@ def show_students
     print_footer(pad)
 end
 
-
-def interactive_menu
+def initialise_variables
     @students = []
     #Default Parameters
     @spacing = 10
@@ -188,18 +177,24 @@ def interactive_menu
     @max_characters = 30
     @input_students = []
     
+end
+
+def interactive_menu
+        initialise_variables
+        
+        try_load_students
     
     loop do
         # Print the menu and ask user
         
         print_main_menu
-        ans = gets.chomp
+        ans = STDIN.gets.chomp
         
         case ans
             when "1" 
                 print_input_student_menu
                 
-                ans = gets.chomp
+                ans = STDIN.gets.chomp
                 
                 
                 case ans
@@ -232,6 +227,10 @@ def interactive_menu
             when "6"
                 save_students
                 
+            when "7"
+                load_students
+                
+                
             when "9"
                 exit 
             else 
@@ -241,12 +240,13 @@ def interactive_menu
     end
     
 end
+
 def check_students
     if @students.empty?
         puts "Currently no students stored in the system!"
         puts "1. Use Defaults"
         puts "2. Input Manually"
-        ans = gets.chomp
+        ans = STDIN.gets.chomp
         case ans 
             when "1" then @students = @default_students;
             when "2" then input_students; 
@@ -270,7 +270,7 @@ def set_parameters
         puts "3. Maximum No Characters: #{@max_characters}"
         puts "9. Exit"
         print "Choose number of variable you need to change >"
-        ans = gets.chomp
+        ans = STDIN.gets.chomp
         
         case ans
             when "1"
@@ -294,7 +294,7 @@ end
 
 def change_variable(variable)
     print "Insert new value for #{variable} (Return Blank to cancel) > "
-    ans = gets.chomp 
+    ans = STDIN.gets.chomp 
     variable = ans unless ans.empty?
 end
 
@@ -302,9 +302,12 @@ end
 
 def save_students 
     filename = "students.csv"
-    file = File.open(filename, "w")
+    input_filename
     
-    @default_students.each do |student|
+    file = File.open(filename, "w")
+    file.truncate(0)
+    
+    @students.each do |student|
         student_data = [student[:name], student[:cohort]]
         csv_line = student_data.join(",")
         file.puts csv_line
@@ -312,7 +315,57 @@ def save_students
     file.close
     
     puts "Current student list written to #{filename} successfully."
+    sleep(1)
     
+end
+
+def filename_check(filename)
+      if File.exists?(filename)
+         return true 
+      else
+          puts "File does not exist, using default"
+          return false
+      end
+end
+
+def input_filename
+    while true
+    print "Insert Filename to load/save students from/to, press return to use default > "
+    filename = STDIN.gets.chomp
+        if filename_check(filename)
+            return filename
+        else
+            return "students.csv"
+        end
+    end
+end
+
+def load_students (filename = "students.csv")
+    filename = input_filename
+    
+    file = File.open(filename,"r")
+    @students =[]
+    file.readlines.each do |line|
+        name, cohort = line.chomp.split(",")
+        @students << {name: name, cohort: cohort.to_sym}
+    end
+    
+    file.close
+    puts "Student list imported from #{filename}"
+    sleep(1)
+end
+
+
+def try_load_students
+    filename = ARGV.first
+    filename = "students.csv" if filename.nil?
+    if File.exists?(filename)
+        load_students(filename)
+        puts "Loaded #{@students.count} students from #{filename}"
+    else
+        puts "Sorry, #{filename} doesn't exist."
+        exit
+    end
 end
 =begin
 #Inputs
