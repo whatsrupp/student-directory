@@ -1,20 +1,106 @@
-#Hash of students for testing purposes.
-@default_students = [
-    {name: "Dr. Hannibal Lecter",           cohort: :march,     hobby: :coding,     age: 45},
-    {name: "Darth Vader",                   cohort: :april,     hobby: :coding,     age: 45},
-    {name: "Nurse Ratched",                 cohort: :april,     hobby: :coding,     age: 45},
-    {name: "Michael Corleone",              cohort: :march,     hobby: :coding,     age: 45},
-    {name: "Alex DeLarge",                  cohort: :november,  hobby: :coding,     age: 45},
-    {name: "The Wicked Witch of the West",  cohort: :november,  hobby: :coding,     age: 45},
-    {name: "Terminator",                    cohort: :november,  hobby: :coding,     age: 45},
-    {name: "Freddy Krueger",                cohort: :november,  hobby: :coding,     age: 45},
-    {name: "The Joker",                     cohort: :november,  hobby: :coding,     age: 45},
-    {name: "Joffrey Baratheon",             cohort: :november,  hobby: :coding,     age: 45},
-    {name: "Jeremy Bowers",                 cohort: :november,  hobby: :coding,     age: 45},
-    {name: "Norman Bates",                  cohort: :november,  hobby: :coding,     age: 45}
-]
+##### STUDENT DIRECTORY
+# Methods Have attempted to be arranged logically in the following order:
+# 1) Menu Set UP
+# 2) Main Menu Processes
+# 3) Then Working through each sub menu
 
-#############INPUTS################
+require "csv"
+######## MENU TEXT SET UP AND INITIALISATION METHODS #########
+
+
+def print_main_menu
+   
+    puts ""
+    puts "MAIN MENU".center(30)
+    puts "1. Input the students"
+    puts "2. Show the students"
+    puts "3. Change default search parameters"
+    puts "4. Clear current student list"
+    puts "5. Search Students"
+    puts "6. Save Students to .csv"
+    puts "7. Load Students from .csv"
+    puts "9. Exit"
+    print "> "
+    
+end
+
+
+def sort_menu
+   puts "SORT MENU"
+   puts "1. Arrange by cohort"
+   puts "9. Exit"
+end
+
+def initialise_variables
+    @students = []
+    #Default Parameters
+    @spacing = 10
+    @letter = "D"
+    @max_characters = 30
+    @input_students = []
+    @default_csv = "students.csv"
+    
+end
+
+######### MAIN MENU FUNCTIONALITY METHODS ########
+def interactive_menu
+        initialise_variables
+        try_load_students
+        main_menu_process
+end
+
+def main_menu_process 
+    loop do
+        print_main_menu
+        ans = STDIN.gets.chomp
+        
+        case ans
+            when "1" then input_student_menu
+                
+            when "2" then check_students; show_students
+            
+            when "3" then set_parameters
+                
+            when "4" then @students = []; puts "Students Cleared"
+            
+            when "5" then arrange_by_cohort; puts "Students arranged by cohort"
+            
+            when "6" then save_students
+                
+            when "7" then load_students
+                
+            when "9" then exit 
+                
+            else puts "I don't know what you mean"
+        end
+    end
+end
+
+##### UNDERLYING MENU METHODS #####
+
+
+##### 1. Input Students #####
+
+def input_student_menu
+    
+    #Input students
+    puts ""
+    puts "INPUT STUDENT MENU"
+    puts "1. Input your own students"
+    puts "2. Generate default student list"
+    puts "9. Return to Main Menu"
+    print "> "
+    
+    ans = STDIN.gets.chomp
+    case ans
+        when "1" then input_students
+        when "2" then @students = @default_students
+        when "9" then return
+        else "I don't know what you mean"
+    end
+
+end
+
 def input_students
    
    puts "Please enter the names of the students"
@@ -55,35 +141,20 @@ def input_students
       case ans
         when "1" then return 
         when "2" then input_students
-        
       end
-      
-      
    end
 end
 
-########FILTERING AND ARRANGING ##############
 
-def arrange_by_cohort
-    
-    @students = @students.sort_by {|student| student[:cohort].to_s}
-    
+##### 2. Show Students
+
+def show_students
+    return if @students.empty?
+    pad = calculate_padding(@spacing)[1]
+    print_header(pad)
+    print_student_list(@spacing)
+    print_footer(pad)
 end
-
-
-def first_letter_filter
-    @students.select! {|student| student[:name].downcase.start_with?(@search_letter.downcase)}
-    puts "Searching for student names beginning with #{search_letter}"
-    return @students
-end
-
-def character_length_filter
-    @students.select! {|student| student[:name].length < @search_length}
-    puts "Searching for student names less than #{@search_length} characters."
-end
-
-################# PRINTING METHODS ##############
-
 
 def print_footer(pad)
     puts "-" * pad
@@ -133,104 +204,6 @@ def calculate_padding (spacing)
     
 end
 
-######## MENU TEXT SET UP AND INITIALISATION METHODS #########
-
-def print_main_menu
-   
-    puts ""
-    puts "MAIN MENU".center(30)
-    puts "1. Input the students"
-    puts "2. Show the students"
-    puts "3. Change default search parameters"
-    puts "4. Clear current student list"
-    puts "5. Search Students"
-    puts "6. Save Students to .csv"
-    puts "7. Load Students from .csv"
-    puts "9. Exit"
-    print "> "
-    
-end
-
-def input_student_menu
-    
-    #Input students
-    puts ""
-    puts "INPUT STUDENT MENU"
-    puts "1. Input your own students"
-    puts "2. Generate default student list"
-    puts "9. Return to Main Menu"
-    print "> "
-    
-    ans = STDIN.gets.chomp
-    case ans
-        when "1" then input_students
-        when "2" then @students = @default_students
-        when "9" then return
-        else "I don't know what you mean"
-    end
-
-end
-
-def sort_menu
-   puts "SORT MENU"
-   puts "1. Arrange by cohort"
-   puts "9. Exit"
-end
-
-def initialise_variables
-    @students = []
-    #Default Parameters
-    @spacing = 10
-    @letter = "D"
-    @max_characters = 30
-    @input_students = []
-    
-end
-
-######### MAIN MENU FUNCTIONALITY METHODS ########
-def interactive_menu
-        initialise_variables
-        try_load_students
-        main_menu_process
-end
-
-def main_menu_process 
-    loop do
-        print_main_menu
-        ans = STDIN.gets.chomp
-        
-        case ans
-            when "1" then input_student_menu
-                
-            when "2" then check_students; show_students
-            
-            when "3" then set_parameters
-                
-            when "4" then @students = []; puts "Students Cleared"
-            
-            when "5" then arrange_by_cohort; puts "Students arranged by cohort"
-            
-            when "6" then save_students
-                
-            when "7" then load_students
-                
-            when "9" then exit 
-                
-            else puts "I don't know what you mean"
-        end
-    end
-end
-
-####### UNDERLYING MENU METHODS
-def show_students
-    return if @students.empty?
-    pad = calculate_padding(@spacing)[1]
-    print_header(pad)
-    print_student_list(@spacing)
-    print_footer(pad)
-end
-
-
 def check_students
     if @students.empty?
         puts "Currently no students stored in the system!"
@@ -245,6 +218,8 @@ def check_students
     end
 end
 
+
+##### 3. Set Parameters
 
 def set_parameters
     loop do
@@ -283,22 +258,35 @@ def change_variable(variable)
 end
 
 
+##### 5. Sorting Methods 
+
+def arrange_by_cohort
+    @students = @students.sort_by {|student| student[:cohort].to_s}
+end
+
+
+def first_letter_filter
+    @students.select! {|student| student[:name].downcase.start_with?(@search_letter.downcase)}
+    puts "Searching for student names beginning with #{search_letter}"
+end
+
+def character_length_filter
+    @students.select! {|student| student[:name].length < @search_length}
+    puts "Searching for student names less than #{@search_length} characters."
+end
+
+
+##### 6/7. Save/ Load Students from CSV
+
 def save_students 
-    filename = "students.csv"
-    input_filename
+    input_filename(@default_csv)
     
-    File.open(filename, "w") do |f|
-        f.truncate(0)
-        
-        @students.each do |student|
-            student_data = [student[:name], student[:cohort]]
-            csv_line = student_data.join(",")
-            f.puts csv_line
-        end
+    CSV.open(filename, "w") do |csv|
+        csv.truncate(0) # Clear file to prevent write over
+        @students.each { |student| csv << [student[:name], student[:cohort]] }
+        puts "Current student list written to #{filename} successfully."
+        sleep(1)
     end
-    
-    puts "Current student list written to #{filename} successfully."
-    sleep(1)
     
 end
 
@@ -311,27 +299,25 @@ def filename_check(filename)
       end
 end
 
-def input_filename
+def input_filename(default_filename)
     while true
     print "Insert Filename to load/save students from/to, press return to use default > "
     filename = STDIN.gets.chomp
         if filename_check(filename)
             return filename
         else
-            return "students.csv"
+            return default_filename
         end
     end
 end
 
-def load_students (filename = "students.csv")
-    filename = input_filename
+def load_students (filename = @default_csv)
+    filename = input_filename(@default_csv)
+    @students =[]
     
-    File.open(filename,"r") do |f|
-        @students =[]
-        f.readlines.each do |line|
-            name, cohort = line.chomp.split(",")
+    CSV.foreach(filename) do |row|
+            name, cohort = row
             @students << {name: name, cohort: cohort.to_sym}
-        end
     end
     
     puts "Student list imported from #{filename}"
@@ -352,7 +338,24 @@ def try_load_students
 end
 
 
-#### RUN THE PROGRAMME #######
+##### DEFAULT STUDENT HASH #####
 
+@default_students = [
+    {name: "Dr. Hannibal Lecter",           cohort: :march,     hobby: :coding,     age: 45},
+    {name: "Darth Vader",                   cohort: :april,     hobby: :coding,     age: 45},
+    {name: "Nurse Ratched",                 cohort: :april,     hobby: :coding,     age: 45},
+    {name: "Michael Corleone",              cohort: :march,     hobby: :coding,     age: 45},
+    {name: "Alex DeLarge",                  cohort: :november,  hobby: :coding,     age: 45},
+    {name: "The Wicked Witch of the West",  cohort: :november,  hobby: :coding,     age: 45},
+    {name: "Terminator",                    cohort: :november,  hobby: :coding,     age: 45},
+    {name: "Freddy Krueger",                cohort: :november,  hobby: :coding,     age: 45},
+    {name: "The Joker",                     cohort: :november,  hobby: :coding,     age: 45},
+    {name: "Joffrey Baratheon",             cohort: :november,  hobby: :coding,     age: 45},
+    {name: "Jeremy Bowers",                 cohort: :november,  hobby: :coding,     age: 45},
+    {name: "Norman Bates",                  cohort: :november,  hobby: :coding,     age: 45}
+]
+
+
+#### RUN THE PROGRAMME #######
 
 interactive_menu
