@@ -266,11 +266,8 @@ end
 
 def full_sort
    first_letter_filter
-   puts "#{@students}"
    character_length_filter
-   puts "#{@students}"
    arrange_by_cohort
-   puts "#{@students}"
    
    puts "Students beginning with #{@letter} less than #{@max_characters} chracters have been arranged by cohort!"
    
