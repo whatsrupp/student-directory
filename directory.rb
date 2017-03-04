@@ -14,9 +14,9 @@ def print_main_menu
     puts "MAIN MENU".center(30)
     puts "1. Input the students"
     puts "2. Show the students"
-    puts "3. Change default search parameters"
+    puts "3. Change search parameters"
     puts "4. Clear current student list"
-    puts "5. Search Students"
+    puts "5. Filter students to search parameters"
     puts "6. Save Students to .csv"
     puts "7. Load Students from .csv"
     puts "8. Print Ruby source code"
@@ -64,8 +64,8 @@ def main_menu_process
                 
             when "4" then @students = []; puts "Students Cleared"
             
-            when "5" then arrange_by_cohort; puts "Students arranged by cohort"
-            
+            when "5" then full_sort
+        
             when "6" then save_students
                 
             when "7" then load_students
@@ -157,6 +157,7 @@ def show_students
     print_header(pad)
     print_student_list(@spacing)
     print_footer(pad)
+    sleep (1)
 end
 
 def print_footer(pad)
@@ -263,26 +264,36 @@ end
 
 ##### 5. Sorting Methods 
 
+def full_sort
+   first_letter_filter
+   puts "#{@students}"
+   character_length_filter
+   puts "#{@students}"
+   arrange_by_cohort
+   puts "#{@students}"
+   
+   puts "Students beginning with #{@letter} less than #{@max_characters} chracters have been arranged by cohort!"
+   
+end
+
 def arrange_by_cohort
     @students = @students.sort_by {|student| student[:cohort].to_s}
 end
 
 
 def first_letter_filter
-    @students.select! {|student| student[:name].downcase.start_with?(@search_letter.downcase)}
-    puts "Searching for student names beginning with #{search_letter}"
+    @students.select! { |student| student[:name].downcase.start_with?(@letter.downcase)}
 end
 
 def character_length_filter
-    @students.select! {|student| student[:name].length < @search_length}
-    puts "Searching for student names less than #{@search_length} characters."
+    @students.select! {|student| student[:name].length < @max_characters}
 end
 
 
 ##### 6/7. Save/ Load Students from CSV
 
 def save_students 
-    input_filename(@default_csv)
+    filename = input_filename(@default_csv)
     
     CSV.open(filename, "w") do |csv|
         csv.truncate(0) # Clear file to prevent write over
@@ -324,7 +335,7 @@ def load_students (filename = @default_csv)
     end
     
     puts "Student list imported from #{filename}"
-    sleep(1)
+    
 end
 
 
@@ -335,13 +346,15 @@ def try_load_students
         load_students(filename)
         puts "Loaded #{@students.count} students from #{filename}"
     else
+        File.new("students.csv","w")
         puts "Sorry, #{filename} doesn't exist."
+        puts "Created a blank 'students.csv' file for use in the program"
         exit
     end
 end
 
 ##### 8. Print Own Source Code
-def print_own_code # CALLED A QUINE
+def print_own_code 
     
    File.open($PROGRAM_NAME, "r") do |file| # COULD USE $0, possible to do with a QUINE
        file.readlines.each do |line|
